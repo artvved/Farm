@@ -11,7 +11,7 @@ namespace Game.Service
     public class Fabric
     {
         private EcsWorld world;
-        private EcsWorld eventWorld;
+       
         private StaticData staticData;
 
         
@@ -20,10 +20,9 @@ namespace Game.Service
         private EcsPool<BaseViewComponent> baseViewPool;
        
             
-        public Fabric(EcsWorld world,EcsWorld eventWorld,  StaticData staticData)
+        public Fabric(EcsWorld world, StaticData staticData,SceneData sceneData)
         {
             this.world = world;
-            this.eventWorld = eventWorld;
             this.staticData = staticData;
 
            

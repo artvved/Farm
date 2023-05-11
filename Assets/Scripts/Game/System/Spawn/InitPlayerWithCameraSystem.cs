@@ -21,7 +21,7 @@ namespace Game.System
             
             var plEntity=fabric.Value.InstantiatePlayer();
             var playerView = (PlayerView)playerTransformPool.Get(plEntity).Value;
-            sceneData.Value.Camera.Follow = playerView.LookAt;
+            sceneData.Value.Camera.Follow = playerView.transform;
             sceneData.Value.Camera.LookAt = playerView.LookAt;
             
             

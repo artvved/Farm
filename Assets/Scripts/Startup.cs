@@ -5,6 +5,7 @@ using DefaultNamespace;
 using Game.Component;
 using Game.Service;
 using Game.System;
+using LeoEcsPhysics;
 using Leopotam.EcsLite;
 using Leopotam.EcsLite.Di;
 using Leopotam.EcsLite.ExtendedSystems;
@@ -16,7 +17,7 @@ public class Startup : MonoBehaviour
 {
     private EcsWorld world;
     private EcsSystems systems;
-    
+    private EcsSystems phisSystems;
 
     [SerializeField]
     private SceneData sceneData;
@@ -27,37 +28,67 @@ public class Startup : MonoBehaviour
         world = new EcsWorld();
         var eventWorld = new EcsWorld();
         systems = new EcsSystems(world);
+        phisSystems = new EcsSystems(world);
+        EcsPhysicsEvents.ecsWorld = eventWorld;
         
-        systems
-            .AddWorld(eventWorld,Idents.EVENT_WORLD)
-            .Add(new InitPlayerWithCameraSystem())
-            
-            .Add(new MoveJoystickInputSystem())
-            .Add(new MoveSystem())
-
-            .Add(new UpdateCoinsViewSystem())
+        phisSystems.AddWorld(eventWorld,Idents.EVENT_WORLD)
             
             
-            .DelHere<CoinsChangedEventComponent>(Idents.EVENT_WORLD)
+            .Add(new MoveApplySystem())
+            .Add(new RotationApplySystem())
+            
+           
+            
+            .DelHerePhysics(Idents.EVENT_WORLD)
           
 #if UNITY_EDITOR
             .Add (new Leopotam.EcsLite.UnityEditor.EcsWorldDebugSystem ())
             .Add (new Leopotam.EcsLite.UnityEditor.EcsWorldDebugSystem (Idents.EVENT_WORLD))
 #endif
-            .Inject(new Fabric(world,eventWorld,staticData))
+            .Inject(new Fabric(world,staticData,sceneData))
+            .Inject(sceneData)
+            .Inject(staticData)
+           // .Inject(new MovementService(world))
+           // .Inject(new AnimationService(world))
+            .Init();
+        
+        systems
+            .AddWorld(eventWorld,Idents.EVENT_WORLD)
+            .Add(new InitPlayerWithCameraSystem())
+            
+            .Add(new JoystickInputSystem())
+            .Add(new InputMoveSystem())
+            
+
+            .Add(new UpdateCoinsViewSystem())
+            
+            
+            .DelHere<CoinsChangedEventComponent>(Idents.EVENT_WORLD)
+            .DelHere<JoystickDragEvent>(Idents.EVENT_WORLD)
+            .DelHere<JoystickStartDragEvent>(Idents.EVENT_WORLD)
+            .DelHere<JoystickEndDragEvent>(Idents.EVENT_WORLD)
+          
+#if UNITY_EDITOR
+            .Add (new Leopotam.EcsLite.UnityEditor.EcsWorldDebugSystem ())
+            .Add (new Leopotam.EcsLite.UnityEditor.EcsWorldDebugSystem (Idents.EVENT_WORLD))
+#endif
+            .Inject(new Fabric(world,staticData,sceneData))
             .Inject(sceneData)
             .Inject(staticData)
             .InjectUgui(sceneData.EcsUguiEmitter,Idents.EVENT_WORLD)
             .Init();
-        
-       
-        
+
     }
 
     
     void Update()
     {
         systems?.Run();
+    }
+
+    private void FixedUpdate()
+    {
+        phisSystems?.Run();
     }
 
     private void OnDestroy()
@@ -67,11 +98,18 @@ public class Startup : MonoBehaviour
             systems.Destroy();
             systems = null;
         }
+        
+        if (phisSystems!=null)
+        {
+            phisSystems.Destroy();
+            phisSystems = null;
+        }
 
         if (world!=null)
         {
             world.Destroy();
             world = null;
         }
+        EcsPhysicsEvents.ecsWorld = null;
     }
 }

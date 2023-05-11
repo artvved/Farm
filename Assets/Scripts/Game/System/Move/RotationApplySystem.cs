@@ -1,23 +1,15 @@
-using Game.Component;
-using Game.Mono;
-using Game.Service;
+﻿using Game.Component;
 using Leopotam.EcsLite;
 using Leopotam.EcsLite.Di;
-using Mitfart.LeoECSLite.UnityIntegration;
-using ScriptableData;
 using UnityEngine;
-
 
 namespace Game.System
 {
-    public class MoveSystem : IEcsInitSystem, IEcsRunSystem
+    public class RotationApplySystem: IEcsInitSystem, IEcsRunSystem
     {
         private EcsWorld world;
       
         readonly EcsPoolInject<BaseViewComponent> transformPool=default;
-       
-        readonly EcsPoolInject<CantMoveComponent> cantMovePool = default;
-        readonly EcsPoolInject<SpeedComponent> speedPool = default;
         readonly EcsPoolInject<DirectionComponent> directionPool = default;
 
         private EcsFilter unitTransformFilter;
@@ -26,9 +18,9 @@ namespace Game.System
         public void Init(IEcsSystems systems)
         {
             world = systems.GetWorld();
-            unitTransformFilter = world.Filter<SpeedComponent>()
-                .Inc<DirectionComponent>()
+            unitTransformFilter = world.Filter<DirectionComponent>()
                 .Inc<BaseViewComponent>()
+               
                 .End();
         }
 
@@ -36,16 +28,11 @@ namespace Game.System
         {
             foreach (var entity in unitTransformFilter)
             {
-                if (cantMovePool.Value.Has(entity))
-                    continue;
-                var speed = speedPool.Value.Get(entity).Value;
                 var direction = directionPool.Value.Get(entity).Value;
                 var valueTransform = transformPool.Value.Get(entity).Value.transform;
                 
-                var delta = Time.deltaTime * speed * direction;
-                valueTransform.position += delta;
-                
-                
+                valueTransform.rotation = Quaternion.LookRotation(direction);
+
             }
         }
     }

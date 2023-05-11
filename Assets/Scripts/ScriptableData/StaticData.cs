@@ -11,6 +11,8 @@ namespace ScriptableData
         
         public PlayerView PlayerPrefab;
         
+        public CultureView WheatPrefab;
+
         //ui
        
     }
