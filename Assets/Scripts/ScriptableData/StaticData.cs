@@ -7,13 +7,12 @@ namespace ScriptableData
     [CreateAssetMenu]
     public class StaticData : ScriptableObject
     {
-        public PlayerStats PlayerStats;
-        
+        public PlayerData playerData;
+
         public PlayerView PlayerPrefab;
-        
-        public CultureView WheatPrefab;
+
+        public CultureData[] Cultures;
 
         //ui
-       
     }
 }

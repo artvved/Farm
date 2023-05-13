@@ -14,7 +14,7 @@ namespace Game.System
         private EcsWorld world;
         private EcsWorld eventWorld;
         private readonly EcsCustomInject<SceneData> sceneData = default;
-        private readonly EcsPoolInject<PlayerStatsComponent> unitPool = default;
+        private readonly EcsPoolInject<PlayerStats> unitPool = default;
 
 
         private EcsFilter eventFilter;

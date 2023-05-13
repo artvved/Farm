@@ -9,9 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d2fb8fbb7b254fdda61cb71497385c6c, type: 3}
-  m_Name: PlayerStats
+  m_Script: {fileID: 11500000, guid: 673f3a4eea8a4c78ae546a00558f0f19, type: 3}
+  m_Name: Wheat
   m_EditorClassIdentifier: 
-  MaxSpeed: 4
-  MaxCapacity: 10
-  Coins: 10
+  Prefab: {fileID: 9214664293809947155, guid: 79d87b1633548964b9be74afe2834d76, type: 3}
+  GrowthTime: 3
+  Coins: 1
+  CultureType: 1

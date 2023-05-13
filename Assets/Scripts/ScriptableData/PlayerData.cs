@@ -3,10 +3,10 @@
 namespace ScriptableData
 {
     [CreateAssetMenu]
-    public class PlayerStats : ScriptableObject
+    public class PlayerData : ScriptableObject
     {
         public float MaxSpeed;
-        public float MaxCapacity;
+        public int MaxCapacity;
         public int Coins;
        
     }

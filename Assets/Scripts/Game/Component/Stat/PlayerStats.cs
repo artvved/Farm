@@ -1,6 +1,6 @@
 ﻿namespace Game.Component
 {
-    public struct PlayerStatsComponent
+    public struct PlayerStats
     {
         public float MaxSpeed;
         public float MaxCapacity;

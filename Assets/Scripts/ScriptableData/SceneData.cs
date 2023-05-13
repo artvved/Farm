@@ -1,4 +1,5 @@
 using Cinemachine;
+using Game.Mono;
 using Game.Service;
 using Game.UI;
 using Leopotam.EcsLite.Unity.Ugui;
@@ -13,6 +14,8 @@ namespace ScriptableData
        
         public CoinsView CoinsView;
         public FloatingJoystick Joystick;
+
+        public FarmView[] Farms;
 
     }
 }

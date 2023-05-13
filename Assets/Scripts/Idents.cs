@@ -10,5 +10,12 @@
             public const string Health = "Health";
             public const string AttackSpeed = "AttackSpeed";
         }
+        
+        public static class Animation
+        {
+            public const string Harvest = "Harvest";
+            public const string Grow = "Grow";
+          
+        }
     }
 }

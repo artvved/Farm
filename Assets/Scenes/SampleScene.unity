@@ -123,6 +123,17 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &174525055 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9035851219176166170, guid: e42f4497abf66a64b82dc4c66c7665d4, type: 3}
+  m_PrefabInstance: {fileID: 9035851219939614000}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfa307ec29dc451985c65a5245ae9b66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &212432331
 GameObject:
   m_ObjectHideFlags: 0
@@ -618,14 +629,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0.46891725, y: -0.000000015197394, z: 0.000000008068366, w: 0.88324213}
-  m_LocalPosition: {x: 5.5, y: 14.6, z: -20}
+  m_LocalRotation: {x: 0.3420201, y: -0, z: -0, w: 0.9396927}
+  m_LocalPosition: {x: 0, y: 17.1, z: -14.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1796700053}
   m_RootOrder: -1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 40, y: 0, z: 0}
 --- !u!114 &963194229
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -684,15 +695,15 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 964458300}
-  m_LocalRotation: {x: 0.46891725, y: -0.000000015197394, z: 0.000000008068366, w: 0.88324213}
-  m_LocalPosition: {x: 5.5, y: 14.6, z: -20}
+  m_LocalRotation: {x: 0.3420201, y: 0, z: 0, w: 0.9396927}
+  m_LocalPosition: {x: 0, y: 17.1, z: -14.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 742611643}
   m_Father: {fileID: 1796700053}
   m_RootOrder: -1
-  m_LocalEulerAnglesHint: {x: 28.569, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 40, y: 0, z: 0}
 --- !u!114 &964458302
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -994,6 +1005,8 @@ MonoBehaviour:
   Camera: {fileID: 964458302}
   CoinsView: {fileID: 1160829486}
   Joystick: {fileID: 1723934584}
+  Farms:
+  - {fileID: 174525055}
 --- !u!4 &1789351889
 Transform:
   m_ObjectHideFlags: 0
@@ -1448,6 +1461,18 @@ PrefabInstance:
     serializedVersion: 2
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 7481114906515555085, guid: e42f4497abf66a64b82dc4c66c7665d4, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9035851218680692307, guid: e42f4497abf66a64b82dc4c66c7665d4, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9035851218984309047, guid: e42f4497abf66a64b82dc4c66c7665d4, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9035851219176166169, guid: e42f4497abf66a64b82dc4c66c7665d4, type: 3}
       propertyPath: m_Name
       value: Farm
@@ -1466,7 +1491,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9035851219176166171, guid: e42f4497abf66a64b82dc4c66c7665d4, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 2.9
       objectReference: {fileID: 0}
     - target: {fileID: 9035851219176166171, guid: e42f4497abf66a64b82dc4c66c7665d4, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1494,6 +1519,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9035851219176166171, guid: e42f4497abf66a64b82dc4c66c7665d4, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9035851219492857606, guid: e42f4497abf66a64b82dc4c66c7665d4, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 6ae3f7b768f555b4a9856c39f4683fe9, type: 2}
+    - target: {fileID: 9035851219915471732, guid: e42f4497abf66a64b82dc4c66c7665d4, type: 3}
+      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
