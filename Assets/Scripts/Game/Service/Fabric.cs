@@ -15,7 +15,8 @@ namespace Game.Service
 
         private StaticData staticData;
         private SceneData sceneData;
-
+        
+        private CultureDataService cultureDataService;
 
         private EcsPool<PlayerTag> poolPlayer;
         private EcsPool<PlayerStats> poolPlayerStats;
@@ -24,14 +25,14 @@ namespace Game.Service
         private EcsPool<Culture> poolCulture;
         private EcsPool<Tick> poolTick;
         private EcsPool<Damaging> poolDamaging;
+        private EcsPool<Loot> poolLoot;
 
-
-        public Fabric(EcsWorld world, StaticData staticData, SceneData sceneData)
+        public Fabric(EcsWorld world, StaticData staticData, SceneData sceneData,CultureDataService cultureDataService)
         {
             this.world = world;
             this.staticData = staticData;
             this.sceneData = sceneData;
-
+            this.cultureDataService = cultureDataService;
 
             poolPlayer = world.GetPool<PlayerTag>();
             poolPlayerStats = world.GetPool<PlayerStats>();
@@ -40,10 +41,11 @@ namespace Game.Service
             poolCulture = world.GetPool<Culture>();
             poolTick = world.GetPool<Tick>();
             poolDamaging = world.GetPool<Damaging>();
+            poolLoot = world.GetPool<Loot>();
         }
 
 
-        private int InstantiateEntWithView(BaseView prefab, Vector3 position)
+        private int InstantiateEntityWithView(BaseView prefab, Vector3 position)
         {
             var view = GameObject.Instantiate(prefab);
             view.transform.position = position;
@@ -66,10 +68,12 @@ namespace Game.Service
         }
 
 
-        public int InitFarm(FarmView view,CultureData cultureData)
+        public int InitFarm(FarmView view,CultureType cultureType)
         {
             var entity = InitEntityWithView(view);
             ref var farmStats = ref poolFarmStats.Add(entity);
+            var cultureData = cultureDataService.GetData(cultureType);
+            
             farmStats.CultureCoins = cultureData.Coins;
             farmStats.CurrentCulture = cultureData.CultureType;
 
@@ -83,16 +87,24 @@ namespace Game.Service
 
         public int InstantiateCulture(CultureData cultureData,Transform transform)
         {
-            var entity = InstantiateEntWithView(cultureData.Prefab,transform.position);
+            var entity = InstantiateEntityWithView(cultureData.Prefab,transform.position);
             poolBaseView.Get(entity).Value.transform.parent = transform;
-            poolCulture.Add(entity);
+            poolCulture.Add(entity).CultureType=cultureData.CultureType;
             poolTick.Add(entity).FinalTime = cultureData.GrowthTime;
             return entity;
         }
 
+        public int InstantiateLoot(CultureType cultureType,Vector3 pos)
+        {
+            var entity = InstantiateEntityWithView(cultureDataService.GetLootPrefab(cultureType), pos);
+            poolLoot.Add(entity);
+            return entity;
+        }
+        
+
         public int InstantiatePlayer()
         {
-            var playerEntity = InstantiateEntWithView(staticData.PlayerPrefab, Vector3.zero);
+            var playerEntity = InstantiateEntityWithView(staticData.PlayerPrefab, Vector3.zero);
             poolPlayer.Add(playerEntity);
             ref var playerStatsComponent = ref poolPlayerStats.Add(playerEntity);
             playerStatsComponent.MaxCapacity = staticData.playerData.MaxCapacity;

@@ -1,7 +1,4 @@
-﻿namespace DefaultNamespace
+﻿public enum CultureType
 {
-    public enum CultureType
-    {
-        NONE,WHEAT,MUSHROOM
-    }
+    NONE,WHEAT,MUSHROOM
 }

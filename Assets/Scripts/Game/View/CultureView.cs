@@ -6,6 +6,7 @@ namespace Game.Mono
 {
     public class CultureView : BaseView
     {
+        public Transform LootSpawnPlace;
         private Animator animator;
         private Collider collider;
         

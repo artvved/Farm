@@ -16,9 +16,11 @@ namespace DefaultNamespace.Game.System.Interact
         
         private readonly EcsPoolInject<HarvestEvent> poolEvent = Idents.EVENT_WORLD;
   
+        private readonly EcsPoolInject<DeadTag> poolDead = default;
         private readonly EcsPoolInject<PlayerTag> poolPlayer = default;
         private readonly EcsPoolInject<Damaging> poolDamaging = default;
         private readonly EcsPoolInject<Culture> poolCulture = default;
+        private readonly EcsPoolInject<Loot> poolLoot = default;
 
 
         private EcsFilter enterFilter;
@@ -75,14 +77,21 @@ namespace DefaultNamespace.Game.System.Interact
                 if (IsCulture(sender) && IsDamaging(collider))
                 {
                     poolEvent.NewEntity(out int newEnt).Target=world.PackEntity(sender);
+                    continue;
+                }
+                
+                if (IsLoot(sender) && IsPlayer(collider))
+                {
+                    //destroy loot (to do)
+                    poolDead.Value.Add(sender);
+                    //poolEvent.NewEntity(out int newEnt).Target=world.PackEntity(sender);
+                    continue;
                 }
                 
             }
 
            
         }
-
-   
         
         
         private bool IsPlayer(int ent)
@@ -96,6 +105,10 @@ namespace DefaultNamespace.Game.System.Interact
         private bool IsDamaging(int ent)
         {
             return poolDamaging.Value.Has(ent);
+        }
+        private bool IsLoot(int ent)
+        {
+            return poolLoot.Value.Has(ent);
         }
 
         

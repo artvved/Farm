@@ -32,7 +32,9 @@ public class Startup : MonoBehaviour
         systems = new EcsSystems(world);
         phisSystems = new EcsSystems(world);
         EcsPhysicsEvents.ecsWorld = eventWorld;
-        
+
+        var cultureDataService = new CultureDataService(staticData);
+
         phisSystems.AddWorld(eventWorld,Idents.EVENT_WORLD)
             
             
@@ -48,7 +50,7 @@ public class Startup : MonoBehaviour
             .Add (new Leopotam.EcsLite.UnityEditor.EcsWorldDebugSystem ())
             .Add (new Leopotam.EcsLite.UnityEditor.EcsWorldDebugSystem (Idents.EVENT_WORLD))
 #endif
-            .Inject(new Fabric(world,staticData,sceneData))
+           
             .Inject(sceneData)
             .Inject(staticData)
            // .Inject(new MovementService(world))
@@ -64,6 +66,7 @@ public class Startup : MonoBehaviour
 
             .Add(new HarvestSystem())
             .Add(new CultureSpawnTickSystem())
+            .Add(new DestroyDeadSystem())
 
             .Add(new UpdateCoinsViewSystem())
             
@@ -78,7 +81,8 @@ public class Startup : MonoBehaviour
             .Add (new Leopotam.EcsLite.UnityEditor.EcsWorldDebugSystem ())
             .Add (new Leopotam.EcsLite.UnityEditor.EcsWorldDebugSystem (Idents.EVENT_WORLD))
 #endif
-            .Inject(new Fabric(world,staticData,sceneData))
+            .Inject(new Fabric(world,staticData,sceneData,cultureDataService))
+            .Inject(cultureDataService)
             .Inject(sceneData)
             .Inject(staticData)
             .InjectUgui(sceneData.EcsUguiEmitter,Idents.EVENT_WORLD)

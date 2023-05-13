@@ -2,6 +2,6 @@
 {
     public struct Culture
     {
-        
+        public CultureType CultureType;
     }
 }

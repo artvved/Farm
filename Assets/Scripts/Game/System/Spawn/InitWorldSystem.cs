@@ -1,3 +1,4 @@
+using DefaultNamespace;
 using Game.Component;
 using Game.Mono;
 using Game.Service;
@@ -12,7 +13,8 @@ namespace Game.System
     {
         private readonly EcsCustomInject<Fabric> fabric=default;
         private readonly EcsCustomInject<SceneData> sceneData = default;
-        private readonly EcsCustomInject<StaticData> staticData = default;
+       
+        
     
 
         public void Init(IEcsSystems systems)
@@ -22,7 +24,7 @@ namespace Game.System
             var farms = sceneData.Value.Farms;
             foreach (var farm in farms)
             {
-                fabric.Value.InitFarm(farm,staticData.Value.Cultures[0]);
+                fabric.Value.InitFarm(farm,CultureType.WHEAT);
             }
         }
 
