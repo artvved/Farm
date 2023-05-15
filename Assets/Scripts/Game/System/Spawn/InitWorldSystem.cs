@@ -13,13 +13,16 @@ namespace Game.System
     {
         private readonly EcsCustomInject<Fabric> fabric=default;
         private readonly EcsCustomInject<SceneData> sceneData = default;
-       
         
-    
 
         public void Init(IEcsSystems systems)
         {
             var plEntity=fabric.Value.InstantiatePlayer();
+            var poolBaseView = systems.GetWorld().GetPool<BaseViewComponent>();
+            
+            var playerView = (PlayerView)poolBaseView.Get(plEntity).Value;
+            sceneData.Value.Camera.Follow = playerView.transform;
+            sceneData.Value.Camera.LookAt = playerView.LookAt;
 
             var farms = sceneData.Value.Farms;
             foreach (var farm in farms)

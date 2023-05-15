@@ -112,13 +112,18 @@ namespace Game.Service
             playerStatsComponent.MaxSpeed = staticData.playerData.MaxSpeed;
             
             var playerView = (PlayerView)poolBaseView.Get(playerEntity).Value;
-            sceneData.Camera.Follow = playerView.transform;
-            sceneData.Camera.LookAt = playerView.LookAt;
             var playerViewWeapon = playerView.Weapon;
-            var weapon=InitEntityWithView(playerViewWeapon);
-            poolDamaging.Add(weapon);
+
+            InitWeapon(playerViewWeapon);
 
             return playerEntity;
+        }
+
+        public int InitWeapon(BaseView baseView)
+        {
+            var weapon=InitEntityWithView(baseView);
+            poolDamaging.Add(weapon);
+            return weapon;
         }
     }
 }

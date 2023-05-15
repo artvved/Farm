@@ -39,11 +39,12 @@ namespace DefaultNamespace.Game.System.Interact
                 
                 var cultureView = (CultureView)poolView.Value.Get(target).Value;
                 cultureView.Harvest();
+                
                 poolTick.Value.Get(target).CurrentTime = 0;
                 poolHarvested.Value.Add(target);
+                
                 //drop loot
                 var cultureType = poolCulture.Value.Get(target).CultureType;
-
                 fabric.Value.InstantiateLoot(cultureType,cultureView.LootSpawnPlace.position);
             }
         }

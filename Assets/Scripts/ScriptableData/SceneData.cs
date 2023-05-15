@@ -11,10 +11,10 @@ namespace ScriptableData
     {
         public EcsUguiEmitter EcsUguiEmitter;
         public CinemachineVirtualCamera Camera;
-       
         public CoinsView CoinsView;
         public FloatingJoystick Joystick;
-
+        
+        
         public FarmView[] Farms;
 
     }

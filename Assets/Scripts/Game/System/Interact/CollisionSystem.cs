@@ -6,16 +6,20 @@ using Leopotam.EcsLite.Di;
 
 namespace DefaultNamespace.Game.System.Interact
 {
-    public class CollisionSystem: IEcsInitSystem, IEcsRunSystem
+    public class CollisionSystem : IEcsInitSystem, IEcsRunSystem
     {
         private EcsWorld world;
         private EcsWorld eventWorld;
 
         private readonly EcsPoolInject<OnTriggerEnterEvent> poolTriggerEnter = Idents.EVENT_WORLD;
         private readonly EcsPoolInject<OnTriggerExitEvent> poolTriggerExit = Idents.EVENT_WORLD;
-        
+
         private readonly EcsPoolInject<HarvestEvent> poolEvent = Idents.EVENT_WORLD;
-  
+
+        //tmp
+        private readonly EcsPoolInject<CoinsChangedEventComponent> poolCoinsEvent = Idents.EVENT_WORLD;
+        private readonly EcsPoolInject<PlayerStats> poolPlayerStats = default;
+
         private readonly EcsPoolInject<DeadTag> poolDead = default;
         private readonly EcsPoolInject<PlayerTag> poolPlayer = default;
         private readonly EcsPoolInject<Damaging> poolDamaging = default;
@@ -25,7 +29,7 @@ namespace DefaultNamespace.Game.System.Interact
 
         private EcsFilter enterFilter;
         private EcsFilter exitFilter;
-   
+
 
         public void Init(IEcsSystems systems)
         {
@@ -34,7 +38,6 @@ namespace DefaultNamespace.Game.System.Interact
 
             enterFilter = eventWorld.Filter<OnTriggerEnterEvent>().End();
             exitFilter = eventWorld.Filter<OnTriggerExitEvent>().End();
-    
         }
 
         public void Run(IEcsSystems systems)
@@ -53,11 +56,8 @@ namespace DefaultNamespace.Game.System.Interact
 
                 int sender = senderView.Entity;
                 int collider = colliderView.Entity;
-
-              
-              
             }
-            
+
             foreach (var enterEnt in enterFilter)
             {
                 var enterEvent = poolTriggerEnter.Value.Get(enterEnt);
@@ -73,47 +73,45 @@ namespace DefaultNamespace.Game.System.Interact
                 int sender = senderView.Entity;
                 int collider = colliderView.Entity;
 
-              
+
                 if (IsCulture(sender) && IsDamaging(collider))
                 {
-                    poolEvent.NewEntity(out int newEnt).Target=world.PackEntity(sender);
+                    poolEvent.NewEntity(out int newEnt).Target = world.PackEntity(sender);
                     continue;
                 }
-                
+
                 if (IsLoot(sender) && IsPlayer(collider))
                 {
-                    //destroy loot (to do)
+                    //tmp
                     poolDead.Value.Add(sender);
+                    ref var playerStats = ref poolPlayerStats.Value.Get(collider);
+                    playerStats.Coins++;
+                    poolCoinsEvent.NewEntity(out int newEnt);
                     //poolEvent.NewEntity(out int newEnt).Target=world.PackEntity(sender);
                     continue;
                 }
-                
             }
-
-           
         }
-        
-        
+
+
         private bool IsPlayer(int ent)
         {
             return poolPlayer.Value.Has(ent);
         }
+
         private bool IsCulture(int ent)
         {
             return poolCulture.Value.Has(ent);
         }
+
         private bool IsDamaging(int ent)
         {
             return poolDamaging.Value.Has(ent);
         }
+
         private bool IsLoot(int ent)
         {
             return poolLoot.Value.Has(ent);
         }
-
-        
-      
-
-       
     }
 }
