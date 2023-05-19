@@ -8,11 +8,11 @@ namespace ScriptableData
     public class StaticData : ScriptableObject
     {
         public PlayerData playerData;
-
-        public PlayerView PlayerPrefab;
-
+        public UnitData playerUnitData;
+        public BulletData BulletData;
+        
+        public UnitData[] Enemies;
+        
         public CultureData[] Cultures;
-
-        //ui
     }
 }

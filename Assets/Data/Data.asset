@@ -13,6 +13,9 @@ MonoBehaviour:
   m_Name: Data
   m_EditorClassIdentifier: 
   playerData: {fileID: 11400000, guid: ed483b6b86d4dea42a172f54f60c66ce, type: 2}
-  PlayerPrefab: {fileID: -2429317109482105764, guid: c4e01180182b3a642baebe90be925697, type: 3}
+  playerUnitData: {fileID: 11400000, guid: 74615b4ab303037428fbd81393ee4996, type: 2}
+  BulletData: {fileID: 11400000, guid: c59cafea52005de47884cdd6ee21d237, type: 2}
+  Enemies:
+  - {fileID: 11400000, guid: aad1bcb3937a907478db41b3b9948755, type: 2}
   Cultures:
   - {fileID: 11400000, guid: b1a4be114fe610e45b579a0b61f277b4, type: 2}

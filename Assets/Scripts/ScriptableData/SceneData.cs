@@ -13,6 +13,8 @@ namespace ScriptableData
         public CinemachineVirtualCamera Camera;
         public CoinsView CoinsView;
         public FloatingJoystick Joystick;
+
+        public Transform EnemySpawnPlace;
         
         
         public FarmView[] Farms;

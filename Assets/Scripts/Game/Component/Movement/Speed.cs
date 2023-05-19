@@ -1,6 +1,6 @@
 ﻿namespace Game.Component
 {
-    public struct SpeedComponent
+    public struct Speed
     {
         public float Value;
     }

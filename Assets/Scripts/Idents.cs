@@ -7,8 +7,8 @@
         public static class Ui
         {
             public const string MoveJoystick = "MoveJoystick";
-            public const string Health = "Health";
-            public const string AttackSpeed = "AttackSpeed";
+            public const string Switch = "Switch";
+            public const string Shot = "Shot";
         }
         
         public static class Animation

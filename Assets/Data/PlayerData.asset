@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxSpeed: 4
   MaxCapacity: 10
-  Coins: 10
+  Coins: 0

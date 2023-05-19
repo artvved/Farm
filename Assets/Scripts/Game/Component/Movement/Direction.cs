@@ -2,7 +2,7 @@
 
 namespace Game.Component
 {
-    public struct DirectionComponent
+    public struct Direction
     {
         public Vector3 Value;
     }

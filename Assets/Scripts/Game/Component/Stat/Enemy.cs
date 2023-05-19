@@ -1,6 +1,6 @@
 ﻿namespace Game.Component
 {
-    public struct Damaging
+    public struct Enemy
     {
         
     }

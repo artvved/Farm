@@ -17,8 +17,8 @@ namespace Game.System
         private EcsWorld eventWorld;
         
         private readonly EcsPoolInject<PlayerStats> playerStatsPool = default;
-        private readonly EcsPoolInject<SpeedComponent> speedPool = default;
-        private readonly EcsPoolInject<DirectionComponent> directionPool = default;
+        private readonly EcsPoolInject<Speed> speedPool = default;
+        private readonly EcsPoolInject<Direction> directionPool = default;
         
         private readonly EcsPoolInject<JoystickDragEvent> poolDrag = Idents.EVENT_WORLD;
         private readonly EcsPoolInject<JoystickStartDragEvent> poolStartDrag = Idents.EVENT_WORLD;
@@ -48,7 +48,7 @@ namespace Game.System
                     var maxSpeed = GetPlayerMaxSpeed(player);
                     var joystickDirection = poolStartDrag.Value.Get(eventEntity).Value;
                     speedPool.Value.Add(player).Value = joystickDirection.magnitude * maxSpeed;
-                    directionPool.Value.Add(player).Value = new Vector3(joystickDirection.x, 0, joystickDirection.y);
+                    directionPool.Value.Get(player).Value = new Vector3(joystickDirection.x, 0, joystickDirection.y);
                 }
                 
                 foreach (var eventEntity in filterDrag)
@@ -62,7 +62,7 @@ namespace Game.System
                 foreach (var eventEntity in filterEndDrag)
                 {
                     speedPool.Value.Del(player);
-                    directionPool.Value.Del(player);
+                    //directionPool.Value.Del(player);
                 }
                 
                 

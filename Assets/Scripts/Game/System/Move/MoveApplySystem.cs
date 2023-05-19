@@ -17,8 +17,8 @@ namespace Game.System
         readonly EcsPoolInject<BaseViewComponent> transformPool=default;
        
         readonly EcsPoolInject<CantMoveComponent> cantMovePool = default;
-        readonly EcsPoolInject<SpeedComponent> speedPool = default;
-        readonly EcsPoolInject<DirectionComponent> directionPool = default;
+        readonly EcsPoolInject<Speed> speedPool = default;
+        readonly EcsPoolInject<Direction> directionPool = default;
 
         private EcsFilter unitTransformFilter;
        
@@ -26,8 +26,8 @@ namespace Game.System
         public void Init(IEcsSystems systems)
         {
             world = systems.GetWorld();
-            unitTransformFilter = world.Filter<SpeedComponent>()
-                .Inc<DirectionComponent>()
+            unitTransformFilter = world.Filter<Speed>()
+                .Inc<Direction>()
                 .Inc<BaseViewComponent>()
                 .End();
         }

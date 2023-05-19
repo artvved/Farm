@@ -27,7 +27,8 @@ namespace Game.System
             var farms = sceneData.Value.Farms;
             foreach (var farm in farms)
             {
-                fabric.Value.InitFarm(farm,CultureType.WHEAT);
+                var farmEnt=fabric.Value.InitEmptyFarm(farm);
+                fabric.Value.InstantiateCultureToFarm(farmEnt,CultureType.WHEAT);
             }
         }
 

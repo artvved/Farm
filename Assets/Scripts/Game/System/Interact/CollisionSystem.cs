@@ -18,14 +18,16 @@ namespace DefaultNamespace.Game.System.Interact
 
         //tmp
         private readonly EcsPoolInject<CoinsChangedEventComponent> poolCoinsEvent = Idents.EVENT_WORLD;
-        private readonly EcsPoolInject<PlayerStats> poolPlayerStats = default;
+        private readonly EcsPoolInject<DamageEvent> poolDamageEvent = Idents.EVENT_WORLD;
+        private readonly EcsPoolInject<Coins> poolCoins = default;
 
         private readonly EcsPoolInject<DeadTag> poolDead = default;
         private readonly EcsPoolInject<PlayerTag> poolPlayer = default;
-        private readonly EcsPoolInject<Damaging> poolDamaging = default;
+        private readonly EcsPoolInject<DamagingBody> poolDamaging = default;
         private readonly EcsPoolInject<Culture> poolCulture = default;
         private readonly EcsPoolInject<Loot> poolLoot = default;
-
+        private readonly EcsPoolInject<Enemy> poolEnemy = default;
+        private readonly EcsPoolInject<Attacking> poolAttacking = default;
 
         private EcsFilter enterFilter;
         private EcsFilter exitFilter;
@@ -74,9 +76,25 @@ namespace DefaultNamespace.Game.System.Interact
                 int collider = colliderView.Entity;
 
 
+                //harvest
                 if (IsCulture(sender) && IsDamaging(collider))
                 {
                     poolEvent.NewEntity(out int newEnt).Target = world.PackEntity(sender);
+                    continue;
+                }
+                
+                //bullet
+                if (IsEnemy(sender) && IsDamaging(collider))
+                {
+                    ref var damageEvent = ref poolDamageEvent.NewEntity(out int newEnt);
+                    damageEvent.Target = world.PackEntity(sender);
+                    damageEvent.Damage = poolAttacking.Value.Get(collider).Damage;
+                    //tmp
+                    if (!poolDead.Value.Has(collider))
+                    {
+                        poolDead.Value.Add(collider);
+                    }
+                  
                     continue;
                 }
 
@@ -84,8 +102,8 @@ namespace DefaultNamespace.Game.System.Interact
                 {
                     //tmp
                     poolDead.Value.Add(sender);
-                    ref var playerStats = ref poolPlayerStats.Value.Get(collider);
-                    playerStats.Coins++;
+                    ref var coins = ref poolCoins.Value.Get(collider);
+                    coins.Value++;
                     poolCoinsEvent.NewEntity(out int newEnt);
                     //poolEvent.NewEntity(out int newEnt).Target=world.PackEntity(sender);
                     continue;
@@ -112,6 +130,11 @@ namespace DefaultNamespace.Game.System.Interact
         private bool IsLoot(int ent)
         {
             return poolLoot.Value.Has(ent);
+        }
+        
+        private bool IsEnemy(int ent)
+        {
+            return poolEnemy.Value.Has(ent);
         }
     }
 }

@@ -14,7 +14,7 @@ namespace Game.System
         private EcsWorld world;
         private EcsWorld eventWorld;
         private readonly EcsCustomInject<SceneData> sceneData = default;
-        private readonly EcsPoolInject<PlayerStats> unitPool = default;
+        private readonly EcsPoolInject<Coins> poolCoins = default;
 
 
         private EcsFilter eventFilter;
@@ -34,7 +34,7 @@ namespace Game.System
             {
                 foreach (var player in playerFilter)
                 {
-                    sceneData.Value.CoinsView.TextMeshProUGUI.text = unitPool.Value.Get(player).Coins.ToString();
+                    sceneData.Value.CoinsView.TextMeshProUGUI.text = poolCoins.Value.Get(player).Value.ToString();
                 }
             }
         }

@@ -10,7 +10,7 @@ namespace Game.System
         private EcsWorld world;
       
         readonly EcsPoolInject<BaseViewComponent> transformPool=default;
-        readonly EcsPoolInject<DirectionComponent> directionPool = default;
+        readonly EcsPoolInject<Direction> directionPool = default;
 
         private EcsFilter unitTransformFilter;
        
@@ -18,7 +18,7 @@ namespace Game.System
         public void Init(IEcsSystems systems)
         {
             world = systems.GetWorld();
-            unitTransformFilter = world.Filter<DirectionComponent>()
+            unitTransformFilter = world.Filter<Direction>()
                 .Inc<BaseViewComponent>()
                
                 .End();

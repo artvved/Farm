@@ -14,10 +14,8 @@ namespace DefaultNamespace.Game.System.Interact
         private EcsWorld eventWorld;
 
         private readonly EcsPoolInject<Tick> poolTick = default;
-        private readonly EcsCustomInject<Fabric> fabric = default;
 
         private readonly EcsPoolInject<Harvested> poolHarvested = default;
-        private readonly EcsPoolInject<Culture> poolCulture = default;
         private readonly EcsPoolInject<BaseViewComponent> poolView = default;
         private readonly EcsPoolInject<HarvestEvent> poolEvent = Idents.EVENT_WORLD;
         
@@ -42,10 +40,6 @@ namespace DefaultNamespace.Game.System.Interact
                 
                 poolTick.Value.Get(target).CurrentTime = 0;
                 poolHarvested.Value.Add(target);
-                
-                //drop loot
-                var cultureType = poolCulture.Value.Get(target).CultureType;
-                fabric.Value.InstantiateLoot(cultureType,cultureView.LootSpawnPlace.position);
             }
         }
 

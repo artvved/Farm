@@ -6,6 +6,7 @@ using DefaultNamespace.Game.System.Interact;
 using Game.Component;
 using Game.Service;
 using Game.System;
+using Game.System.Interact;
 using Game.System.Timing;
 using LeoEcsPhysics;
 using Leopotam.EcsLite;
@@ -42,7 +43,6 @@ public class Startup : MonoBehaviour
             .Add(new RotationApplySystem())
             .Add(new CollisionSystem())
             
-           
             
             .DelHerePhysics(Idents.EVENT_WORLD)
           
@@ -62,10 +62,20 @@ public class Startup : MonoBehaviour
             .Add(new InitWorldSystem())
             
             .Add(new JoystickInputSystem())
+            .Add(new ClickInputSystem())
             .Add(new InputMoveSystem())
+            
+            .Add(new ShotTickSystem())
 
+            .Add(new DefenceSystem())
+            .Add(new DamageApplySystem())
             .Add(new HarvestSystem())
+            .Add(new LootSpawnSystem())
             .Add(new CultureSpawnTickSystem())
+            .Add(new EnemySpawnTickSystem())
+            .Add(new LifetimeSystem())
+            
+            
             .Add(new DestroyDeadSystem())
 
             .Add(new UpdateCoinsViewSystem())
@@ -76,6 +86,9 @@ public class Startup : MonoBehaviour
             .DelHere<JoystickStartDragEvent>(Idents.EVENT_WORLD)
             .DelHere<JoystickEndDragEvent>(Idents.EVENT_WORLD)
             .DelHere<HarvestEvent>(Idents.EVENT_WORLD)
+            .DelHere<SwitchEvent>(Idents.EVENT_WORLD)
+            .DelHere<ShotEvent>(Idents.EVENT_WORLD)
+            .DelHere<DamageEvent>(Idents.EVENT_WORLD)
           
 #if UNITY_EDITOR
             .Add (new Leopotam.EcsLite.UnityEditor.EcsWorldDebugSystem ())
