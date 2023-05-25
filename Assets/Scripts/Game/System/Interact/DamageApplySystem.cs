@@ -12,12 +12,12 @@ namespace DefaultNamespace.Game.System.Interact
         private EcsWorld eventWorld;
         
         private readonly EcsPoolInject<DamageEvent> poolDamageEvent = Idents.EVENT_WORLD;
-        
+        private readonly EcsPoolInject<LootInventoryEvent> poolInvEvent = Idents.EVENT_WORLD;
+
         private readonly EcsPoolInject<Health> poolHealth = default;
         private readonly EcsPoolInject<DeadTag> poolDead = default;
 
 
-      
         private EcsFilter filterDamageEvent;
 
 
@@ -43,6 +43,8 @@ namespace DefaultNamespace.Game.System.Interact
                     if (!poolDead.Value.Has(target))
                     {
                         poolDead.Value.Add(target);
+                        ref var lootInventoryEvent = ref poolInvEvent.NewEntity(out int entity);
+                        lootInventoryEvent.Target = world.PackEntity(target);
                     }
                 }
             }

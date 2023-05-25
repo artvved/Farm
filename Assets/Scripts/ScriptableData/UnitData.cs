@@ -1,4 +1,5 @@
-﻿using Game.Mono;
+﻿using DefaultNamespace;
+using Game.Mono;
 using UnityEngine;
 
 namespace ScriptableData
@@ -14,6 +15,9 @@ namespace ScriptableData
         public float AttackPeriod;
         
         public int Coins;
-       
+        //tmp?
+        public ItemType Drop;
+        public int DropCount;
+
     }
 }

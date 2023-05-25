@@ -71,6 +71,7 @@ public class Startup : MonoBehaviour
             .Add(new DamageApplySystem())
             .Add(new HarvestSystem())
             .Add(new LootSpawnSystem())
+            .Add(new LootInventorySystem())
             .Add(new CultureSpawnTickSystem())
             .Add(new EnemySpawnTickSystem())
             .Add(new LifetimeSystem())
@@ -89,6 +90,7 @@ public class Startup : MonoBehaviour
             .DelHere<SwitchEvent>(Idents.EVENT_WORLD)
             .DelHere<ShotEvent>(Idents.EVENT_WORLD)
             .DelHere<DamageEvent>(Idents.EVENT_WORLD)
+            .DelHere<LootInventoryEvent>(Idents.EVENT_WORLD)
           
 #if UNITY_EDITOR
             .Add (new Leopotam.EcsLite.UnityEditor.EcsWorldDebugSystem ())

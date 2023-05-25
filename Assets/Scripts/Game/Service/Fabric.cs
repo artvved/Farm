@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using DefaultNamespace;
 using DefaultNamespace.Game.Component.Time;
 using Game.Component;
 using Game.Mono;
@@ -35,6 +37,7 @@ namespace Game.Service
         private EcsPool<Defence> poolDefence;
         private EcsPool<Direction> poolDirection;
         private EcsPool<Speed> poolSpeed;
+        private EcsPool<Inventory> poolInv;
 
         public Fabric(EcsWorld world, StaticData staticData, SceneData sceneData,CultureDataService cultureDataService)
         {
@@ -59,6 +62,7 @@ namespace Game.Service
             poolDefence = world.GetPool<Defence>();
             poolDirection = world.GetPool<Direction>();
             poolSpeed = world.GetPool<Speed>();
+            poolInv = world.GetPool<Inventory>();
         }
 
 
@@ -155,6 +159,15 @@ namespace Game.Service
             poolDefence.Add(entity).Value = data.Defence;
 
             poolCoins.Add(entity).Value =  data.Coins;
+            
+            Dictionary<ItemType, int> dict = new Dictionary<ItemType, int>();
+            var values = Enum.GetValues(typeof(ItemType));
+            foreach (var item in values)
+            {
+                dict.Add((ItemType)item,0);
+            }
+
+            poolInv.Add(entity).Value = dict;
 
             poolTick.Add(entity).FinalTime = attacking.AttackPeriod;
             
@@ -181,10 +194,17 @@ namespace Game.Service
             ref var attacking = ref poolAttacking.Add(entity);
             attacking.Damage = unitData.Damage;
             attacking.AttackPeriod = unitData.AttackPeriod;
-            poolCoins.Add(entity).Value = unitData.Coins;
+
             ref var health =ref poolHealth.Add(entity);
             health.Hp = health.MaxHp = unitData.MaxHp;
             poolDefence.Add(entity).Value = unitData.Defence;
+            
+            poolCoins.Add(entity).Value = unitData.Coins;
+            
+            poolInv.Add(entity).Value = new Dictionary<ItemType, int>()
+            {
+                {unitData.Drop,unitData.DropCount}
+            };
 
             return entity;
         }
