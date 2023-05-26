@@ -14,5 +14,8 @@ namespace ScriptableData
         public UnitData[] Enemies;
         
         public CultureData[] Cultures;
+        
+        //
+        public int LifestealPercent { get; set; }
     }
 }
