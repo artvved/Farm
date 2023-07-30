@@ -12,6 +12,7 @@ namespace Game.Mono
         private Animator animator;
         private Collider collider;
         
+
         private void Start()
         {
             animator = GetComponent<Animator>();
@@ -25,6 +26,11 @@ namespace Game.Mono
 
         }
 
-       
+        public void ToggleCollider(bool active)
+        {
+            collider.enabled = active;
+        }
+
+
     }
 }

@@ -12,10 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae46adb56b9d43809517337d52d8dab6, type: 3}
   m_Name: Player Unit Data
   m_EditorClassIdentifier: 
-  Prefab: {fileID: -2429317109482105764, guid: c4e01180182b3a642baebe90be925697, type: 3}
+  Prefab: {fileID: 5986592590370561786, guid: 4c7deacb2d43c0c43b0deb9bcf1927be, type: 3}
   MaxSpeed: 4
   MaxHp: 100
   Defence: 5
   Damage: 10
   AttackPeriod: 1
   Coins: 0
+  Drop: 0
+  DropCount: 0

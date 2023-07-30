@@ -1,8 +1,11 @@
-﻿using Game.Component;
+﻿using DefaultNamespace.Game.Component.Time;
+using Game.Component;
 using Game.Mono;
 using LeoEcsPhysics;
 using Leopotam.EcsLite;
 using Leopotam.EcsLite.Di;
+using ScriptableData;
+using UnityEngine;
 
 namespace DefaultNamespace.Game.System.Interact
 {
@@ -19,15 +22,15 @@ namespace DefaultNamespace.Game.System.Interact
         //tmp
         private readonly EcsPoolInject<CoinsChangedEventComponent> poolCoinsEvent = Idents.EVENT_WORLD;
         private readonly EcsPoolInject<DamageEvent> poolDamageEvent = Idents.EVENT_WORLD;
-        private readonly EcsPoolInject<Coins> poolCoins = default;
 
+        private readonly EcsPoolInject<PlayerStats> poolPlayerStats = default;
+        private readonly EcsPoolInject<Lifetime> poolLifetime = default;
+
+        private readonly EcsPoolInject<Coins> poolCoins = default;
         private readonly EcsPoolInject<DeadTag> poolDead = default;
-        private readonly EcsPoolInject<PlayerTag> poolPlayer = default;
-        private readonly EcsPoolInject<DamagingBody> poolDamaging = default;
-        private readonly EcsPoolInject<Culture> poolCulture = default;
-        private readonly EcsPoolInject<Loot> poolLoot = default;
-        private readonly EcsPoolInject<Enemy> poolEnemy = default;
         private readonly EcsPoolInject<Attacking> poolAttacking = default;
+
+        private readonly EcsCustomInject<SceneData> sceneData = default;
 
         private EcsFilter enterFilter;
         private EcsFilter exitFilter;
@@ -64,77 +67,89 @@ namespace DefaultNamespace.Game.System.Interact
             {
                 var enterEvent = poolTriggerEnter.Value.Get(enterEnt);
 
-                var senderView = enterEvent.senderGameObject.gameObject.GetComponent<BaseView>();
-                var colliderView = enterEvent.collider.gameObject.GetComponent<BaseView>();
+                var senderGameObject = enterEvent.senderGameObject.gameObject;
+                var colliderGameObject = enterEvent.collider.gameObject;
 
-                if (senderView == null)
-                    continue;
-                if (colliderView == null)
-                    continue;
-
-                int sender = senderView.Entity;
-                int collider = colliderView.Entity;
-
-
-                //harvest
-                if (IsCulture(sender) && IsDamaging(collider))
+                if (senderGameObject.CompareTag("Culture") && colliderGameObject.CompareTag("Weapon"))
                 {
-                    poolEvent.NewEntity(out int newEnt).Target = world.PackEntity(sender);
-                    continue;
-                }
-                
-                //bullet
-                if (IsEnemy(sender) && IsDamaging(collider))
-                {
-                    ref var damageEvent = ref poolDamageEvent.NewEntity(out int newEnt);
-                    damageEvent.Target = world.PackEntity(sender);
-                    damageEvent.Damage = poolAttacking.Value.Get(collider).Damage;
-                    //tmp
-                    if (!poolDead.Value.Has(collider))
-                    {
-                        poolDead.Value.Add(collider);
-                    }
-                  
+                    Harvest(senderGameObject);
                     continue;
                 }
 
-                if (IsLoot(sender) && IsPlayer(collider))
+                if (senderGameObject.CompareTag("Loot") && colliderGameObject.CompareTag("Player"))
                 {
-                    //tmp
-                    poolDead.Value.Add(sender);
-                    ref var coins = ref poolCoins.Value.Get(collider);
-                    coins.Value++;
-                    poolCoinsEvent.NewEntity(out int newEnt);
-                    //poolEvent.NewEntity(out int newEnt).Target=world.PackEntity(sender);
+                    PickupLoot(senderGameObject, colliderGameObject);
+                    continue;
+                }
+
+                if (senderGameObject.CompareTag("Zone") && colliderGameObject.CompareTag("Player"))
+                {
+                    InteractZone(senderGameObject,colliderGameObject);
+                    continue;
+                }
+
+
+                ////battle
+                if (senderGameObject.CompareTag("Enemy") && colliderGameObject.CompareTag("Weapon"))
+                {
+                    HitEnemy(senderGameObject, colliderGameObject);
                     continue;
                 }
             }
         }
 
-
-        private bool IsPlayer(int ent)
+        private void InteractZone(GameObject senderGameObject, GameObject colliderGameObject)
         {
-            return poolPlayer.Value.Has(ent);
+            int collider = colliderGameObject.GetComponent<BaseView>().Entity;
+            var zoneView = senderGameObject.GetComponent<ZoneView>();
+            var zoneType = zoneView.ZoneType;
+            
+            if (zoneType == ZoneType.FARM)
+            {
+                sceneData.Value.FarmUIScreen.gameObject.SetActive(true);
+            }else if (zoneType == ZoneType.SHOP)
+            {
+                ref var playerStats = ref poolPlayerStats.Value.Get(collider);
+                playerStats.Capacity=0;
+                
+                colliderGameObject.GetComponent<PlayerView>().StackView.ReleaseAll( ((ShopZoneView)zoneView).ItemTarget);
+            }
         }
 
-        private bool IsCulture(int ent)
+        private void Harvest(GameObject senderGameObject)
         {
-            return poolCulture.Value.Has(ent);
+            int sender = senderGameObject.GetComponent<BaseView>().Entity;
+
+            poolEvent.NewEntity(out int newEnt).Target = world.PackEntity(sender);
         }
 
-        private bool IsDamaging(int ent)
+        private void PickupLoot(GameObject senderGameObject, GameObject colliderGameObject)
         {
-            return poolDamaging.Value.Has(ent);
+            int sender = senderGameObject.GetComponent<BaseView>().Entity;
+            int collider = colliderGameObject.GetComponent<BaseView>().Entity;
+
+            ref var playerStats = ref poolPlayerStats.Value.Get(collider);
+            if (playerStats.Capacity >= playerStats.MaxCapacity)
+                return;
+
+            poolLifetime.Value.Del(sender);
+            colliderGameObject.GetComponent<PlayerView>().StackView.AddItem(senderGameObject.GetComponent<LootView>());
+            playerStats.Capacity++;
         }
 
-        private bool IsLoot(int ent)
+        private void HitEnemy(GameObject senderGameObject, GameObject colliderGameObject)
         {
-            return poolLoot.Value.Has(ent);
-        }
-        
-        private bool IsEnemy(int ent)
-        {
-            return poolEnemy.Value.Has(ent);
+            int sender = senderGameObject.GetComponent<BaseView>().Entity;
+            int collider = colliderGameObject.GetComponent<BaseView>().Entity;
+
+            ref var damageEvent = ref poolDamageEvent.NewEntity(out int newEnt);
+            damageEvent.Target = world.PackEntity(sender);
+            damageEvent.Damage = poolAttacking.Value.Get(collider).Damage;
+            //tmp
+            if (!poolDead.Value.Has(collider))
+            {
+                poolDead.Value.Add(collider);
+            }
         }
     }
 }

@@ -5,6 +5,6 @@ namespace Game.Mono
     public class FarmView : BaseView
     {
         public Transform[] CulturePlaces;
-        public FarmInteractorView FarmInteractor;
+        public ZoneView zone;
     }
 }

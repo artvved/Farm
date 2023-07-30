@@ -6,5 +6,6 @@ namespace Game.Mono
     {
         public Transform LookAt;
         public Weapon Weapon;
+        public StackView StackView;
     }
 }

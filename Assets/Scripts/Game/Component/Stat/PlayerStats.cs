@@ -3,8 +3,8 @@
     public struct PlayerStats
     {
         public float MaxSpeed;
-        public float MaxCapacity;
-        public float Capacity;
+        public int MaxCapacity;
+        public int Capacity;
        
 
     }

@@ -12,6 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2fb8fbb7b254fdda61cb71497385c6c, type: 3}
   m_Name: PlayerData
   m_EditorClassIdentifier: 
-  MaxSpeed: 4
-  MaxCapacity: 10
-  Coins: 0
+  MaxCapacity: 5
