@@ -14,11 +14,14 @@ namespace ScriptableData
         [Header("UI")]
         public CoinsView CoinsView;
         public FloatingJoystick Joystick;
+        
         public FarmUIScreen FarmUIScreen;
         
         [Header("Level")]
         public Transform EnemySpawnPlace;
         public FarmView[] Farms;
+
+        public bool StartNewData;
 
     }
 }

@@ -1,13 +1,17 @@
-﻿using DefaultNamespace;
+﻿using System;
+using System.Collections.Generic;
+using DefaultNamespace;
 
 namespace Game.Component
 {
+    [Serializable]
     public struct FarmStats
     {
         public CultureType CurrentCulture;
-        public int CultureCoins;
-        
-        public float GrowthSpeedK;
-        public float MultChance;
+
+        public int GrowthSpeedLevel;
+        public int MultChanceLevel;
+        [NonSerialized]
+        public List<int> CultureEntities;
     }
 }

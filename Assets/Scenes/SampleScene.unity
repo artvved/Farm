@@ -2320,6 +2320,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1612201811 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9035851219176166170, guid: e42f4497abf66a64b82dc4c66c7665d4, type: 3}
+  m_PrefabInstance: {fileID: 356790493}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfa307ec29dc451985c65a5245ae9b66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1723934583 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1419460333080702, guid: cdd5474b97f1a9d40bea678ca8dec2bb, type: 3}
@@ -2421,6 +2432,8 @@ MonoBehaviour:
   EnemySpawnPlace: {fileID: 1008041652}
   Farms:
   - {fileID: 174525055}
+  - {fileID: 1612201811}
+  StartNewData: 0
 --- !u!4 &1789351889
 Transform:
   m_ObjectHideFlags: 0

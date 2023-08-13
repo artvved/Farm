@@ -18,4 +18,22 @@ MonoBehaviour:
   Enemies:
   - {fileID: 11400000, guid: aad1bcb3937a907478db41b3b9948755, type: 2}
   Cultures:
-  - {fileID: 11400000, guid: b1a4be114fe610e45b579a0b61f277b4, type: 2}
+    _serializedList:
+    - Key: 1
+      Value: {fileID: 11400000, guid: b1a4be114fe610e45b579a0b61f277b4, type: 2}
+  GrowthSpeedKProgression:
+  - 1
+  - 0.8
+  - 0.5
+  GrowthSpeedKCostProgression: 000000000a00000014000000
+  MultKProgression:
+  - 1
+  - 1.2
+  - 1.5
+  MultKCostProgression: 00000000080000000f000000
+  FirstLaunchData:
+    Money: 0
+    FarmStats:
+    - CurrentCulture: 1
+      GrowthSpeedLevel: 0
+      MultChanceLevel: 0

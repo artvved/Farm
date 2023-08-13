@@ -18,8 +18,6 @@ namespace Game.Service
 
         private StaticData staticData;
         private SceneData sceneData;
-        
-        private CultureDataService cultureDataService;
 
         private EcsPool<PlayerTag> poolPlayer;
         private EcsPool<PlayerStats> poolPlayerStats;
@@ -39,13 +37,12 @@ namespace Game.Service
         private EcsPool<Speed> poolSpeed;
         private EcsPool<Inventory> poolInv;
 
-        public Fabric(EcsWorld world, StaticData staticData, SceneData sceneData,CultureDataService cultureDataService)
+        public Fabric(EcsWorld world, StaticData staticData, SceneData sceneData)
         {
             this.world = world;
             this.staticData = staticData;
             this.sceneData = sceneData;
-            this.cultureDataService = cultureDataService;
-
+         
             poolPlayer = world.GetPool<PlayerTag>();
             poolPlayerStats = world.GetPool<PlayerStats>();
             poolFarmStats = world.GetPool<FarmStats>();
@@ -89,65 +86,71 @@ namespace Game.Service
         }
 
 
-        public int InitEmptyFarm(FarmView view)
+        public int InitEmptyFarm(FarmView view,FarmStats farmStatsInit)
         {
             var entity = InitEntityWithView(view);
+            view.zone.Entity = entity;
             ref var farmStats = ref poolFarmStats.Add(entity);
             
-            farmStats.CurrentCulture = CultureType.NONE;
-
+            farmStats.CurrentCulture = farmStatsInit.CurrentCulture;
+            farmStats.GrowthSpeedLevel = farmStatsInit.GrowthSpeedLevel;
+            farmStats.MultChanceLevel =farmStatsInit.MultChanceLevel;
+            
             return entity;
         }
 
-        public void InstantiateCultureToFarm(int farm,CultureType cultureType)
+        public void InstantiateCultureToFarm(int farm,CultureData cultureData)
         {
             var view = (FarmView)poolBaseView.Get(farm).Value;
-            var cultureData = cultureDataService.GetData(cultureType);
-            
+
             ref var farmStats = ref poolFarmStats.Get(farm);
-            farmStats.CurrentCulture = cultureData.CultureType;
-            farmStats.CultureCoins = cultureData.Coins;
-            farmStats.GrowthSpeedK = 1;
-            farmStats.MultChance = 50;
-            
+            farmStats.CurrentCulture = cultureData.Culture.CultureType;
+            farmStats.CultureEntities = new List<int>();
             foreach (var transform in view.CulturePlaces)
             {
-                InstantiateCulture(cultureData,transform,farmStats,farm);
+                var culture = InstantiateCulture(cultureData,transform,farmStats);
+                farmStats.CultureEntities.Add(culture);
             }
         }
 
 
-        private int InstantiateCulture(CultureData cultureData,Transform transform,FarmStats farmStats,int farm)
+        private int InstantiateCulture(CultureData cultureData,Transform transform,FarmStats farmStats)
         {
             var entity = InstantiateEntityWithView(cultureData.Prefab,transform.position);
             poolBaseView.Get(entity).Value.transform.parent = transform;
 
-            poolCulture.Add(entity).Farm=farm;
+            ref var culture = ref poolCulture.Add(entity);
+            culture.CultureType = cultureData.Culture.CultureType;
+            culture.GrowthTime = cultureData.Culture.GrowthTime;
+            culture.MultChance = cultureData.Culture.MultChance*staticData.MultKProgression[farmStats.MultChanceLevel];
+            culture.Coins = cultureData.Culture.Coins;
 
-            poolTick.Add(entity).FinalTime = cultureData.GrowthTime/farmStats.GrowthSpeedK;
+            poolTick.Add(entity).FinalTime = cultureData.Culture.GrowthTime*staticData.GrowthSpeedKProgression[farmStats.GrowthSpeedLevel];
             return entity;
         }
 
-        public int InstantiateLoot(FarmStats stats,Vector3 pos)
+        public int InstantiateLoot(CultureType cultureType,Vector3 pos)
         {
-            var entity = InstantiateEntityWithView(cultureDataService.GetLootPrefab(stats.CurrentCulture), pos);
-            poolCoins.Add(entity).Value = stats.CultureCoins;
-            poolLoot.Add(entity);
+            var entity = InstantiateEntityWithView(staticData.Cultures[cultureType].LootPrefab, pos);
+           // poolCoins.Add(entity).Value = stats.CultureCoins;
+            poolLoot.Add(entity).CultureType=cultureType;
             poolLifetime.Add(entity).Value = 3;
             return entity;
         }
         
 
-        public int InstantiatePlayer()
+        public int InstantiatePlayer(bool isFirstTime,int coins)
         {
             var data = staticData.playerUnitData;
             var entity = InstantiateEntityWithView(data.Prefab, Vector3.zero);
             poolPlayer.Add(entity);
             poolDirection.Add(entity).Value=new Vector3(0,0,1);
             
-            ref var playerStatsComponent = ref poolPlayerStats.Add(entity);
-            playerStatsComponent.MaxCapacity = staticData.playerData.MaxCapacity;
-            playerStatsComponent.MaxSpeed = data.MaxSpeed;
+            ref var playerStats = ref poolPlayerStats.Add(entity);
+            playerStats.MaxCapacity = staticData.playerData.MaxCapacity;
+            playerStats.MaxSpeed = data.MaxSpeed;
+            playerStats.IsFirstTime = isFirstTime;
+            playerStats.StackLootEntities = new List<int>();
             
             ref var attacking = ref poolAttacking.Add(entity);
             attacking.Damage = data.Damage;
@@ -158,7 +161,7 @@ namespace Game.Service
             health.Hp = health.MaxHp = data.MaxHp;
             poolDefence.Add(entity).Value = data.Defence;
 
-            poolCoins.Add(entity).Value =  data.Coins;
+            poolCoins.Add(entity).Value =  coins;
             
             Dictionary<ItemType, int> dict = new Dictionary<ItemType, int>();
             var values = Enum.GetValues(typeof(ItemType));

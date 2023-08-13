@@ -12,8 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 673f3a4eea8a4c78ae546a00558f0f19, type: 3}
   m_Name: Wheat
   m_EditorClassIdentifier: 
+  Icon: {fileID: -1017924204, guid: e1185fa9f42589b46a42236f9e5ee9d9, type: 3}
   Prefab: {fileID: 9214664293809947155, guid: 79d87b1633548964b9be74afe2834d76, type: 3}
   LootPrefab: {fileID: 2598000450640733210, guid: 84cdd8b15fae82843a0e8547fd62d8fa, type: 3}
-  GrowthTime: 3
-  Coins: 1
-  CultureType: 1
+  Culture:
+    CultureType: 1
+    GrowthTime: 2
+    MultChance: 50
+    Coins: 1

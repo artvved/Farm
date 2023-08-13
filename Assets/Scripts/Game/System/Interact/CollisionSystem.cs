@@ -20,17 +20,24 @@ namespace DefaultNamespace.Game.System.Interact
         private readonly EcsPoolInject<HarvestEvent> poolEvent = Idents.EVENT_WORLD;
 
         //tmp
-        private readonly EcsPoolInject<CoinsChangedEventComponent> poolCoinsEvent = Idents.EVENT_WORLD;
+        private readonly EcsPoolInject<CoinsChangedEventComponent> poolMoneyEvent = Idents.EVENT_WORLD;
+        private readonly EcsPoolInject<FarmUIUpdateEventComponent> poolFarmUIEvent = Idents.EVENT_WORLD;
         private readonly EcsPoolInject<DamageEvent> poolDamageEvent = Idents.EVENT_WORLD;
 
         private readonly EcsPoolInject<PlayerStats> poolPlayerStats = default;
+       
+
         private readonly EcsPoolInject<Lifetime> poolLifetime = default;
 
-        private readonly EcsPoolInject<Coins> poolCoins = default;
+        private readonly EcsPoolInject<Coins> poolMoney = default;
+        private readonly EcsPoolInject<Loot> poolLoot = default;
         private readonly EcsPoolInject<DeadTag> poolDead = default;
         private readonly EcsPoolInject<Attacking> poolAttacking = default;
+        
 
         private readonly EcsCustomInject<SceneData> sceneData = default;
+        private readonly EcsCustomInject<StaticData> staticData = default;
+
 
         private EcsFilter enterFilter;
         private EcsFilter exitFilter;
@@ -69,6 +76,10 @@ namespace DefaultNamespace.Game.System.Interact
 
                 var senderGameObject = enterEvent.senderGameObject.gameObject;
                 var colliderGameObject = enterEvent.collider.gameObject;
+                if (colliderGameObject == null || senderGameObject == null)
+                    continue;
+                
+                //mb problems with null (fixed by adding 2nd destroySystem)
 
                 if (senderGameObject.CompareTag("Culture") && colliderGameObject.CompareTag("Weapon"))
                 {
@@ -84,7 +95,7 @@ namespace DefaultNamespace.Game.System.Interact
 
                 if (senderGameObject.CompareTag("Zone") && colliderGameObject.CompareTag("Player"))
                 {
-                    InteractZone(senderGameObject,colliderGameObject);
+                    InteractZone(senderGameObject, colliderGameObject);
                     continue;
                 }
 
@@ -103,16 +114,28 @@ namespace DefaultNamespace.Game.System.Interact
             int collider = colliderGameObject.GetComponent<BaseView>().Entity;
             var zoneView = senderGameObject.GetComponent<ZoneView>();
             var zoneType = zoneView.ZoneType;
-            
+
+            ref var coins = ref poolMoney.Value.Get(collider);
             if (zoneType == ZoneType.FARM)
             {
-                sceneData.Value.FarmUIScreen.gameObject.SetActive(true);
-            }else if (zoneType == ZoneType.SHOP)
+                poolFarmUIEvent.NewEntity(out int eventEnt).FarmEntity=zoneView.Entity;
+            }
+            else if (zoneType == ZoneType.SHOP)
             {
                 ref var playerStats = ref poolPlayerStats.Value.Get(collider);
-                playerStats.Capacity=0;
-                
-                colliderGameObject.GetComponent<PlayerView>().StackView.ReleaseAll( ((ShopZoneView)zoneView).ItemTarget);
+
+                colliderGameObject.GetComponent<PlayerView>().StackView
+                    .ReleaseAll(((ShopZoneView) zoneView).ItemTarget);
+
+                foreach (var lootEntity in playerStats.StackLootEntities)
+                {
+                    var cultureType = poolLoot.Value.Get(lootEntity).CultureType;
+                    var cultureCoins = staticData.Value.Cultures[cultureType].Culture.Coins;
+                    coins.Value += cultureCoins;
+                }
+
+                poolMoneyEvent.NewEntity(out int eventEnt);
+                playerStats.StackLootEntities.Clear();
             }
         }
 
@@ -129,12 +152,12 @@ namespace DefaultNamespace.Game.System.Interact
             int collider = colliderGameObject.GetComponent<BaseView>().Entity;
 
             ref var playerStats = ref poolPlayerStats.Value.Get(collider);
-            if (playerStats.Capacity >= playerStats.MaxCapacity)
+            if (playerStats.StackLootEntities.Count >= playerStats.MaxCapacity)
                 return;
 
             poolLifetime.Value.Del(sender);
+            playerStats.StackLootEntities.Add(sender);
             colliderGameObject.GetComponent<PlayerView>().StackView.AddItem(senderGameObject.GetComponent<LootView>());
-            playerStats.Capacity++;
         }
 
         private void HitEnemy(GameObject senderGameObject, GameObject colliderGameObject)

@@ -26,16 +26,23 @@ namespace Game.System
             eventWorld = systems.GetWorld(Idents.EVENT_WORLD);
             eventFilter = eventWorld.Filter<CoinsChangedEventComponent>().End();
             playerFilter = world.Filter<PlayerTag>().End();
+            
+            UpdateUI();
         }
 
         public void Run(IEcsSystems systems)
         {
             foreach (var entity in eventFilter)
             {
-                foreach (var player in playerFilter)
-                {
-                    sceneData.Value.CoinsView.TextMeshProUGUI.text = poolCoins.Value.Get(player).Value.ToString();
-                }
+                UpdateUI();
+            }
+        }
+
+        private void UpdateUI()
+        {
+            foreach (var player in playerFilter)
+            {
+                sceneData.Value.CoinsView.TextMeshProUGUI.text = poolCoins.Value.Get(player).Value.ToString();
             }
         }
     }

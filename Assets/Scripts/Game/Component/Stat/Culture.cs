@@ -1,7 +1,13 @@
-﻿namespace Game.Component
+﻿using System;
+
+namespace Game.Component
 {
+    [Serializable]
     public struct Culture
     {
-        public int Farm;
+        public CultureType CultureType;
+        public float GrowthTime;
+        public float MultChance;
+        public int Coins;
     }
 }

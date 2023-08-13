@@ -18,18 +18,17 @@ namespace Game.System.Timing
         private readonly EcsPoolInject<RemoveCultureEvent> poolEvent = Idents.EVENT_WORLD;
         private readonly EcsPoolInject<Culture> poolCulture = default;
         private readonly EcsPoolInject<DeadTag> poolDead = default;
+        private readonly EcsPoolInject<FarmStats> poolFarm = default;
         
 
         private EcsFilter filterEvent;
-        private EcsFilter filter;
-        
+
         public void Init(IEcsSystems systems)
         {
             world = systems.GetWorld();
             eventWorld = systems.GetWorld(Idents.EVENT_WORLD);
             
             filterEvent = eventWorld.Filter<RemoveCultureEvent>().End();
-            filter = world.Filter<Culture>().End();
         }
 
         public void Run(IEcsSystems systems)
@@ -37,12 +36,10 @@ namespace Game.System.Timing
             foreach (var entity in filterEvent)
             {
                 var farmTarget = poolEvent.Value.Get(entity).FarmTarget;
-                foreach (var culture in filter)
+                var farmStats = poolFarm.Value.Get(farmTarget);
+                foreach (var cultureEnt in farmStats.CultureEntities)
                 {
-                    if(poolCulture.Value.Get(culture).Farm == farmTarget)
-                    {
-                        poolDead.Value.Add(culture);
-                    }
+                    poolDead.Value.Add(cultureEnt);
                 }
             }
         }

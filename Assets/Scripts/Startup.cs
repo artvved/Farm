@@ -19,6 +19,7 @@ using UnityEngine;
 public class Startup : MonoBehaviour
 {
     private EcsWorld world;
+    private EcsWorld eventWorld;
     private EcsSystems systems;
     private EcsSystems phisSystems;
 
@@ -26,23 +27,25 @@ public class Startup : MonoBehaviour
     private SceneData sceneData;
     [SerializeField]
     private StaticData staticData;
+
+    private SaveWorldSystem saveWorldSystem;
+
     void Start()
     {
         world = new EcsWorld();
-        var eventWorld = new EcsWorld();
+        eventWorld = new EcsWorld();
         systems = new EcsSystems(world);
         phisSystems = new EcsSystems(world);
         EcsPhysicsEvents.ecsWorld = eventWorld;
-
-        var cultureDataService = new CultureDataService(staticData);
+        saveWorldSystem = new SaveWorldSystem();
+        
 
         phisSystems.AddWorld(eventWorld,Idents.EVENT_WORLD)
-            
-            
             .Add(new MoveApplySystem())
             .Add(new RotationApplySystem())
             .Add(new CollisionSystem())
             
+            .Add(new DestroyDeadSystem())
             
             .DelHerePhysics(Idents.EVENT_WORLD)
           
@@ -59,7 +62,7 @@ public class Startup : MonoBehaviour
         
         systems
             .AddWorld(eventWorld,Idents.EVENT_WORLD)
-            .Add(new InitWorldSystem())
+            .Add(new LoadWorldSystem())
             
             .Add(new JoystickInputSystem())
             .Add(new ClickInputSystem())
@@ -77,12 +80,17 @@ public class Startup : MonoBehaviour
             .Add(new LifetimeSystem())
             
             
-            .Add(new DestroyDeadSystem())
-
+            .Add(new UpdateFarmUISystem())
             .Add(new UpdateCoinsViewSystem())
+            
+           
+            .Add(new DestroyDeadSystem())
+            
+            .Add(saveWorldSystem)
             
             
             .DelHere<CoinsChangedEventComponent>(Idents.EVENT_WORLD)
+            .DelHere<FarmUIUpdateEventComponent>(Idents.EVENT_WORLD)
             .DelHere<JoystickDragEvent>(Idents.EVENT_WORLD)
             .DelHere<JoystickStartDragEvent>(Idents.EVENT_WORLD)
             .DelHere<JoystickEndDragEvent>(Idents.EVENT_WORLD)
@@ -91,13 +99,13 @@ public class Startup : MonoBehaviour
             .DelHere<ShotEvent>(Idents.EVENT_WORLD)
             .DelHere<DamageEvent>(Idents.EVENT_WORLD)
             .DelHere<LootInventoryEvent>(Idents.EVENT_WORLD)
+            .DelHere<SaveGameEvent>(Idents.EVENT_WORLD)
           
 #if UNITY_EDITOR
             .Add (new Leopotam.EcsLite.UnityEditor.EcsWorldDebugSystem ())
             .Add (new Leopotam.EcsLite.UnityEditor.EcsWorldDebugSystem (Idents.EVENT_WORLD))
 #endif
-            .Inject(new Fabric(world,staticData,sceneData,cultureDataService))
-            .Inject(cultureDataService)
+            .Inject(new Fabric(world,staticData,sceneData))
             .Inject(sceneData)
             .Inject(staticData)
             .InjectUgui(sceneData.EcsUguiEmitter,Idents.EVENT_WORLD)
@@ -105,7 +113,7 @@ public class Startup : MonoBehaviour
 
     }
 
-    
+
     void Update()
     {
         systems?.Run();
@@ -118,6 +126,12 @@ public class Startup : MonoBehaviour
 
     private void OnDestroy()
     {
+#if UNITY_EDITOR
+        saveWorldSystem.Save();
+#else
+        eventWorld.GetPool<SaveGameEvent>().Add(eventWorld.NewEntity());
+#endif
+
         if (systems!=null)
         {
             systems.Destroy();

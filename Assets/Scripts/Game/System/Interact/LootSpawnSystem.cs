@@ -5,6 +5,7 @@ using Game.Service;
 using LeoEcsPhysics;
 using Leopotam.EcsLite;
 using Leopotam.EcsLite.Di;
+using ScriptableData;
 using UnityEngine;
 
 namespace DefaultNamespace.Game.System.Interact
@@ -15,8 +16,8 @@ namespace DefaultNamespace.Game.System.Interact
         private EcsWorld eventWorld;
         
         private readonly EcsCustomInject<Fabric> fabric = default;
+        private readonly EcsCustomInject<StaticData> staticData = default;
 
-      
         private readonly EcsPoolInject<Culture> poolCulture = default;
         private readonly EcsPoolInject<BaseViewComponent> poolView = default;
         private readonly EcsPoolInject<FarmStats> poolFarm = default;
@@ -41,21 +42,21 @@ namespace DefaultNamespace.Game.System.Interact
                 var cultureView = (CultureView)poolView.Value.Get(target).Value;
 
                 //drop loot
-                var farm = poolCulture.Value.Get(target).Farm;
-                var stats = poolFarm.Value.Get(farm);
-                fabric.Value.InstantiateLoot(stats,cultureView.LootSpawnPlace.position);
+                var culture = poolCulture.Value.Get(target);
+                var cultureType= culture.CultureType;
+                fabric.Value.InstantiateLoot(cultureType,cultureView.LootSpawnPlace.position);
                 //drop random loot
-                if (CheckLootByChance(stats))
+                if (CheckLootByChance(culture))
                 {
-                    fabric.Value.InstantiateLoot(stats,cultureView.LootSpawnPlace.position);
+                    fabric.Value.InstantiateLoot(cultureType,cultureView.LootSpawnPlace.position);
                 }
             }
         }
 
-        private bool CheckLootByChance(in FarmStats farmStats)
+        private bool CheckLootByChance(in Culture culture)
         {
             var val = Random.Range(0f, 100f);
-            if (val<=farmStats.MultChance)
+            if (val<=culture.MultChance)
             {
                 return true;
             }

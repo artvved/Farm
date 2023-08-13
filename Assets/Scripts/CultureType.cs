@@ -1,4 +1,6 @@
 ﻿public enum CultureType
 {
-    NONE,WHEAT,MUSHROOM
+    NONE=0,
+    WHEAT=1,
+    MUSHROOM=2
 }
