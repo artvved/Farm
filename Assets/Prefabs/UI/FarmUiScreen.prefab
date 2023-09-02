@@ -274,8 +274,11 @@ MonoBehaviour:
   cultureImage: {fileID: 5628211626033460048}
   text: {fileID: 5628211627720538848}
   exitButton: {fileID: 5628211627891687162}
+  defaultGroundButton: {fileID: 5628211627373060680}
+  pictureButton: {fileID: 5628211626788974603}
   upTimeButton: {fileID: 3463437273072293641}
   upChanceButton: {fileID: 622919015224010621}
+  size: 128
 --- !u!222 &5628211626141998929
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -462,7 +465,7 @@ GameObject:
   - component: {fileID: 5628211626788974602}
   - component: {fileID: 5628211626788974603}
   m_Layer: 5
-  m_Name: Button (5)
+  m_Name: Set picture
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -719,7 +722,7 @@ GameObject:
   - component: {fileID: 5628211627237172493}
   - component: {fileID: 5628211627237172530}
   m_Layer: 5
-  m_Name: Button (2)
+  m_Name: del culture
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -841,7 +844,7 @@ GameObject:
   - component: {fileID: 5628211627373060683}
   - component: {fileID: 5628211627373060680}
   m_Layer: 5
-  m_Name: Button (4)
+  m_Name: default ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1233,7 +1236,7 @@ GameObject:
   - component: {fileID: 5628211627821823767}
   - component: {fileID: 5628211627821823764}
   m_Layer: 5
-  m_Name: Button (3)
+  m_Name: set culture
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

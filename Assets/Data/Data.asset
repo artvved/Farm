@@ -37,3 +37,6 @@ MonoBehaviour:
     - CurrentCulture: 1
       GrowthSpeedLevel: 0
       MultChanceLevel: 0
+    - CurrentCulture: 0
+      GrowthSpeedLevel: 0
+      MultChanceLevel: 0

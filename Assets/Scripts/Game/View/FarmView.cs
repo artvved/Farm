@@ -6,5 +6,7 @@ namespace Game.Mono
     {
         public Transform[] CulturePlaces;
         public ZoneView zone;
+        public GameObject DefaultGround;
+        public Renderer PictureGround;
     }
 }

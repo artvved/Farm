@@ -20,7 +20,10 @@ public class FloatingJoystick : Joystick
 
     public override void OnPointerDown(PointerEventData eventData)
     {
-        
+        if (Input.touchCount>1)
+        {
+            Debug.Log(Input.touchCount);
+        }
         background.gameObject.SetActive(true);
         background.position = eventData.position;
         handle.anchoredPosition = Vector2.zero;

@@ -32,6 +32,8 @@ public class Startup : MonoBehaviour
 
     void Start()
     {
+        Input.multiTouchEnabled = false;
+        
         world = new EcsWorld();
         eventWorld = new EcsWorld();
         systems = new EcsSystems(world);
