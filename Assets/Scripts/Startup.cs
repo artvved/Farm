@@ -83,6 +83,7 @@ public class Startup : MonoBehaviour
             
             
             .Add(new UpdateFarmUISystem())
+            .Add(new PictureSystem())
             .Add(new UpdateCoinsViewSystem())
             
            
@@ -102,6 +103,7 @@ public class Startup : MonoBehaviour
             .DelHere<DamageEvent>(Idents.EVENT_WORLD)
             .DelHere<LootInventoryEvent>(Idents.EVENT_WORLD)
             .DelHere<SaveGameEvent>(Idents.EVENT_WORLD)
+            .DelHere<PictureLoadedEvent>(Idents.EVENT_WORLD)
           
 #if UNITY_EDITOR
             .Add (new Leopotam.EcsLite.UnityEditor.EcsWorldDebugSystem ())

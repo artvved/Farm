@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd6399e844fb44d383e662f22b646593, type: 3}
   m_Name: Data
   m_EditorClassIdentifier: 
+  MaxPictureSize: 128
   playerData: {fileID: 11400000, guid: ed483b6b86d4dea42a172f54f60c66ce, type: 2}
   playerUnitData: {fileID: 11400000, guid: 74615b4ab303037428fbd81393ee4996, type: 2}
   BulletData: {fileID: 11400000, guid: c59cafea52005de47884cdd6ee21d237, type: 2}
@@ -37,6 +38,8 @@ MonoBehaviour:
     - CurrentCulture: 1
       GrowthSpeedLevel: 0
       MultChanceLevel: 0
+      GroundPicture: {fileID: 0}
     - CurrentCulture: 0
       GrowthSpeedLevel: 0
       MultChanceLevel: 0
+      GroundPicture: {fileID: 0}

@@ -10,6 +10,8 @@ namespace ScriptableData
     [CreateAssetMenu]
     public class StaticData : ScriptableObject
     {
+        public int MaxPictureSize;
+        
         public PlayerData playerData;
         public UnitData playerUnitData;
         public BulletData BulletData;

@@ -25,6 +25,7 @@ namespace Game.System
 
         private readonly EcsPoolInject<FarmUIUpdateEventComponent> poolEvent = Idents.EVENT_WORLD;
         private readonly EcsPoolInject<CoinsChangedEventComponent> poolMoneyEvent = Idents.EVENT_WORLD;
+        private readonly EcsPoolInject<PictureLoadedEvent> poolPicLoaded = Idents.EVENT_WORLD;
 
         private readonly EcsCustomInject<SceneData> sceneData = default;
         private readonly EcsCustomInject<StaticData> staticData = default;
@@ -119,10 +120,9 @@ namespace Game.System
         {
             if (NativeGallery.IsMediaPickerBusy())
                 return;
-
             /*  var permissionAsync =
                   NativeGallery.RequestPermissionAsync(NativeGallery.PermissionType.Read, NativeGallery.MediaType.Image);*/
-
+            
             NativeGallery.GetImageFromGallery(async (path) =>
             {
                 if (path != null)
@@ -152,11 +152,12 @@ namespace Game.System
                     texture.wrapMode = TextureWrapMode.Clamp;
                     texture.filterMode = FilterMode.Point;
                     texture.Apply();
-
-                    farmView.PictureGround.gameObject.SetActive(true);
-                    farmView.PictureGround.material.mainTexture = texture;
-                    farmView.DefaultGround.SetActive(false);
-                 
+                    
+                    PictureLoadedEvent.Data data = new PictureLoadedEvent.Data();
+                    data.Farm = farmView.Entity;
+                    data.Picture = texture;
+                    poolPicLoaded.Value.Add(eventWorld.NewEntity()).Value=data;
+                    
                 }
             });
         }

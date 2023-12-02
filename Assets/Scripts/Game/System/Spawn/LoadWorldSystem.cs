@@ -60,7 +60,18 @@ namespace Game.System
                     farmStat.CurrentCulture = (CultureType) PlayerPrefs.GetInt($"Farm{i}_CultureType");
                     farmStat.GrowthSpeedLevel = PlayerPrefs.GetInt($"Farm{i}_GrowthSpeedLevel");
                     farmStat.MultChanceLevel = PlayerPrefs.GetInt($"Farm{i}_MultChanceLevel");
+                    var png = PlayerPrefsExtra.GetList<Color>($"Farm{i}_GroundPicture");
+                    if (png.Count>0)
+                    {
+                        Texture2D ground = new Texture2D(staticData.Value.MaxPictureSize,staticData.Value.MaxPictureSize,TextureFormat.RGBA32,false);
+                        ground.SetPixels(png.ToArray());
+                        ground.wrapMode = TextureWrapMode.Clamp;
+                        ground.filterMode = FilterMode.Point;
+                        ground.Apply();
 
+                        farmStat.GroundPicture = ground;
+                    }
+                  
                     farmStatsList.Add(farmStat);
                    
                 }
@@ -80,6 +91,14 @@ namespace Game.System
                 if (farmStat.CurrentCulture!=CultureType.NONE)
                 {
                     fabric.Value.InstantiateCultureToFarm(farmEnt, staticData.Value.Cultures[farmStat.CurrentCulture]);
+                }
+
+                if (farmStat.GroundPicture!=null)
+                {
+                    var farmView = (FarmView) poolBaseView.Value.Get(farmEnt).Value;
+                    farmView.PictureGround.gameObject.SetActive(true);
+                    farmView.PictureGround.material.mainTexture = farmStat.GroundPicture;
+                    farmView.DefaultGround.SetActive(false);
                 }
                
             }

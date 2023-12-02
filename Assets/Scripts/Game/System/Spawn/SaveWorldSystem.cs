@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using DefaultNamespace;
 using Game.Component;
 using Game.Mono;
@@ -60,11 +62,23 @@ namespace Game.System
                 PlayerPrefs.SetInt($"Farm{i}_CultureType",(int)farmStat.CurrentCulture );
                 PlayerPrefs.SetInt($"Farm{i}_GrowthSpeedLevel",farmStat.GrowthSpeedLevel );
                 PlayerPrefs.SetInt($"Farm{i}_MultChanceLevel",farmStat.MultChanceLevel );
+                if (farmStat.GroundPicture==null)
+                {
+                    PlayerPrefsExtra.SetList($"Farm{i}_GroundPicture",new List<Color>());
+                }
+                else
+                {  
+                    
+                    Color[] png =farmStat.GroundPicture.GetPixels();
+                    PlayerPrefsExtra.SetList($"Farm{i}_GroundPicture",png.ToList());
+                }
                 i++;
             }
 
            // PlayerPrefs.SetInt("FarmsCount",i);
 
         }
+
+       
     }
 }
